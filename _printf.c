@@ -72,11 +72,3 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (chars_printed);
 }
-
-
-int main() {
-    unsigned int num = 42;
-    int printed_chars = _printf("Binary representation of %u: %b\n", num, num);
-    printf("Total characters printed: %d\n", printed_chars);
-    return 0;
-}
