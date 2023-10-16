@@ -60,6 +60,30 @@ int _printf(const char *format, ...)
 				write(1, binary_str, 32);
 				chars_printed += 32;
 				break;
+			case 'u':
+				num2 = va_arg(args, unsigned int);
+				len = sprintf(num_str, "%u", num2);
+				write(1, num_str, len);
+				chars_printed += len;
+				break;
+			case 'o':
+				num2 = va_arg(args, unsigned int);
+				len = sprintf(num_str, "%o", num2);
+				write(1, num_str, len);
+				chars_printed += len;
+				break;
+			case 'x':
+				num2 = va_arg(args, unsigned int);
+				len = sprintf(num_str, "%x", num2);
+				write(1, num_str, len);
+				chars_printed += len;
+				break;
+			case 'X':
+				num2 = va_arg(args, unsigned int);
+				len = sprintf(num_str, "%X", num2);
+				write(1, num_str, len);\
+				chars_printed += len;
+				break;
 			}
 		}
 		else
