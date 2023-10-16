@@ -1,18 +1,12 @@
 #include "main.h"
 
-/**
- * _printf - prints a formatted string to the stdout
- * @format: ...
- *
- * Return: formatted string
- */
-
 int _printf(const char *format, ...)
 {
 	char c, *str, num_str[12], binary_str[33];
-	int chars_printed = 0, i, num, len;
+	int chars_printed = 0, num, len, buffer_index = 0;
 	unsigned int num2;
 	va_list args;
+	char buffer[1024]; // Local buffer
 
 	va_start(args, format);
 
@@ -25,74 +19,90 @@ int _printf(const char *format, ...)
 			{
 			case 'c':
 				c = va_arg(args, int);
-				write(1, &c, 1);
+				buffer[buffer_index++] = c;
 				chars_printed++;
 				break;
 			case 's':
 				str = va_arg(args, char *);
-				write(1, str, strlen(str));
-				chars_printed += strlen(str);
+				while (*str != '\0')
+				{
+					buffer[buffer_index++] = *str;
+					str++;
+					chars_printed++;
+				}
 				break;
 			case '%':
-				write(1, "%", 1);
+				buffer[buffer_index++] = '%';
 				chars_printed++;
 				break;
-
 			case 'd':
-				num = va_arg(args, int);
-				len = sprintf(num_str, "%d", num);
-				write(1, num_str, len);
-				chars_printed += len;
-				break;
 			case 'i':
 				num = va_arg(args, int);
 				len = sprintf(num_str, "%d", num);
-				write(1, num_str, len);
-				chars_printed += len;
-				break;
-			case 'b':
-				num2 = va_arg(args, unsigned int);
-				for (i = 31; i >= 0; i--)
+				for (int i = 0; i < len; i++)
 				{
-					binary_str[31 - i] = ((num2 >> i) & 1)  + '0';
+					buffer[buffer_index++] = num_str[i];
 				}
-				binary_str[32] = '\0';
-				write(1, binary_str, 32);
-				chars_printed += 32;
+				chars_printed += len;
 				break;
 			case 'u':
 				num2 = va_arg(args, unsigned int);
 				len = sprintf(num_str, "%u", num2);
-				write(1, num_str, len);
+				for (int i = 0; i < len; i++)
+				{
+					buffer[buffer_index++] = num_str[i];
+				}
 				chars_printed += len;
 				break;
 			case 'o':
 				num2 = va_arg(args, unsigned int);
 				len = sprintf(num_str, "%o", num2);
-				write(1, num_str, len);
+				for (int i = 0; i < len; i++)
+				{
+					buffer[buffer_index++] = num_str[i];
+				}
 				chars_printed += len;
 				break;
 			case 'x':
 				num2 = va_arg(args, unsigned int);
 				len = sprintf(num_str, "%x", num2);
-				write(1, num_str, len);
+				for (int i = 0; i < len; i++)
+				{
+					buffer[buffer_index++] = num_str[i];
+				}
 				chars_printed += len;
 				break;
 			case 'X':
 				num2 = va_arg(args, unsigned int);
 				len = sprintf(num_str, "%X", num2);
-				write(1, num_str, len);\
+				for (int i = 0; i < len; i++)
+				{
+					buffer[buffer_index++] = num_str[i];
+				}
 				chars_printed += len;
 				break;
 			}
 		}
 		else
 		{
-			write(1, format, 1);
+			buffer[buffer_index++] = *format;
 			chars_printed++;
 		}
+
+		if (buffer_index >= 1024)
+		{
+			write(1, buffer, buffer_index);
+			buffer_index = 0;
+		}
+
 		format++;
 	}
+
+	if (buffer_index > 0)
+	{
+		write(1, buffer, buffer_index);
+	}
+
 	va_end(args);
-	return (chars_printed);
+	return chars_printed;
 }
