@@ -9,8 +9,9 @@
 
 int _printf(const char *format, ...)
 {
-	char c, *str, num_str[12];
-	int chars_printed = 0, num, len;
+	char c, *str, num_str[12], binary_str[33];
+	int chars_printed = 0, i, num, len;
+	unsigned int num2;
 	va_list args;
 
 	va_start(args, format);
@@ -36,7 +37,7 @@ int _printf(const char *format, ...)
 				write(1, "%", 1);
 				chars_printed++;
 				break;
-			
+
 			case 'd':
 				num = va_arg(args, int);
 				len = sprintf(num_str, "%d", num);
@@ -48,6 +49,16 @@ int _printf(const char *format, ...)
 				len = sprintf(num_str, "%d", num);
 				write(1, num_str, len);
 				chars_printed += len;
+				break;
+			case 'b':
+				num2 = va_arg(args, unsigned int);
+				for (i = 31; i >= 0; i--)
+				{
+					binary_str[31 - i] = ((num2 >> i) & 1) ? '1' : '0';
+				}
+				binary_str[32] = '\0';
+				write(1, binary_str, 32);
+				chars_printed += 32;
 				break;
 			}
 		}
