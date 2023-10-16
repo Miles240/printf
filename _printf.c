@@ -102,7 +102,6 @@ int _printf(const char *format, ...)
 	{
 		write(1, buffer, buffer_index);
 	}
-
 	va_end(args);
 	return chars_printed;
 }
