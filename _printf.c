@@ -56,7 +56,7 @@ int _printf(const char *format, ...)
 				{
 					binary_str[31 - i] = ((num2 >> i) & 1)  + '0';
 				}
-				binary_str[33] = '\0';
+				binary_str[32] = '\0';
 				write(1, binary_str, 32);
 				chars_printed += 32;
 				break;
