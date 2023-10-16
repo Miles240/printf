@@ -54,7 +54,7 @@ int _printf(const char *format, ...)
 				num2 = va_arg(args, unsigned int);
 				for (i = 31; i >= 0; i--)
 				{
-					binary_str[31 - i] = ((num2 >> i) & 1) ? '1' : '0';
+					binary_str[31 - i] = ((num2 >> i) & 1)  + '0';
 				}
 				binary_str[32] = '\0';
 				write(1, binary_str, 32);
@@ -71,4 +71,12 @@ int _printf(const char *format, ...)
 	}
 	va_end(args);
 	return (chars_printed);
+}
+
+
+int main() {
+    unsigned int num = 42;
+    int printed_chars = _printf("Binary representation of %u: %b\n", num, num);
+    printf("Total characters printed: %d\n", printed_chars);
+    return 0;
 }
