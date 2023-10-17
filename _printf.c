@@ -1,62 +1,74 @@
 #include "main.h"
-#include "function.h"
 
-Specifier specifiers[] = {
-	 {'c', print_char_wrapper},
-	 {'s', print_string_wrapper},
-	 {'d', print_int_wrapper},
-	 {'i', print_int_wrapper},
-	 {'u', print_unsigned_wrapper},
-	 {'o', print_octal_wrapper},
-	 {'x', print_hexa_wrapper},
-	 {'X', print_hexa_wrapper},
-	 {'%', print_percent_wrapper}};
+/**
+ * _printf - prints a formatted string to the stdout
+ * @format: ...
+ *
+ * Return: formatted string
+ */
 
 int _printf(const char *format, ...)
 {
-	long unsigned int i;
-	int chars_printed = 0, buffer_index = 0;
-	char buffer[1024];
-
+	char c, *str, num_str[12], binary_str[33];
+	int chars_printed = 0, i, num, len;
+	unsigned int num2;
 	va_list args;
+
 	va_start(args, format);
 
-	while (*format)
+	while (*format != '\0')
 	{
 		if (*format == '%')
 		{
 			format++;
-			for (i = 0; i < sizeof(specifiers) / sizeof(specifiers[0]); i++)
+			switch (*format)
 			{
-				if (*format == specifiers[i].specifier)
+			case 'c':
+				c = va_arg(args, int);
+				write(1, &c, 1);
+				chars_printed++;
+				break;
+			case 's':
+				str = va_arg(args, char *);
+				write(1, str, strlen(str));
+				chars_printed += strlen(str);
+				break;
+			case '%':
+				write(1, "%", 1);
+				chars_printed++;
+				break;
+
+			case 'd':
+				num = va_arg(args, int);
+				len = sprintf(num_str, "%d", num);
+				write(1, num_str, len);
+				chars_printed += len;
+				break;
+			case 'i':
+				num = va_arg(args, int);
+				len = sprintf(num_str, "%d", num);
+				write(1, num_str, len);
+				chars_printed += len;
+				break;
+			case 'b':
+				num2 = va_arg(args, unsigned int);
+				for (i = 31; i >= 0; i--)
 				{
-					chars_printed += specifiers[i].printer(args);
-					break;
+					binary_str[31 - i] = ((num2 >> i) & 1) + '0';
 				}
-			}
-			if (i == sizeof(specifiers) / sizeof(specifiers[0]))
-			{
-				buffer[buffer_index++] = '%';
-				buffer[buffer_index++] = *format;
-				chars_printed += 2;
+				binary_str[32] = '\0';
+				write(1, binary_str, 32);
+				chars_printed += 32;
+				break;
 			}
 		}
 		else
 		{
-			buffer[buffer_index++] = *format;
+			write(1, format, 1);
 			chars_printed++;
-		}
-		if (buffer_index >= 1024)
-		{
-			write(1, buffer, buffer_index);
-			buffer_index = 0;
 		}
 		format++;
 	}
-	if (buffer_index > 0)
-	{
-		write(1, buffer, buffer_index);
-	}
 	va_end(args);
-	return chars_printed;
+	return (chars_printed);
 }
