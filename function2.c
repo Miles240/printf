@@ -1,42 +1,25 @@
+#include "function.h"
 #include "main.h"
 
-/**
- * handle_percent - .....
- * @args: param one
- * @format: param two
- * @char_printed: param three
- * @buffer_index: param four
- * @buffer: param five
- * 
-*/
-
-void handle_percent(va_list args, const char *format, int *chars_printed, int *buffer_index, char buffer[])
+int print_unsigned_wrapper(va_list args)
 {
-	format++;
-	switch (*format)
-	{
-	case 'c':
-		print_char_impl(args, buffer, buffer_index, chars_printed);
-		break;
-	case 's':
-		print_string_impl(args, buffer, buffer_index, chars_printed);
-		break;
-	case 'd':
-	case 'i':
-		print_integer_impl(args, buffer, buffer_index, chars_printed);
-		break;
-	case 'u':
-		print_unsigned_impl(args, buffer, buffer_index, chars_printed);
-		break;
-	case 'o':
-		chars_printed += print_octal(va_arg(args, unsigned int));
-		break;
-		break;
-	case 'x':
-	case 'X':
-		chars_printed += print_hexa(va_arg(args, unsigned int), *format == 'X');
-		break;
-	case '%':
-		break;
-	}
+	return print_unsigned(va_arg(args, unsigned int));
+}
+
+int print_octal_wrapper(va_list args)
+{
+	return print_octal(va_arg(args, unsigned int));
+}
+
+int print_hexa_wrapper(va_list args)
+{
+	unsigned int val = va_arg(args, unsigned int);
+	int is_upper = va_arg(args, int);
+	return print_hexa(val, is_upper);
+}
+
+int print_percent_wrapper(va_list args)
+{
+	(void)args;
+	return print_char('%');
 }
