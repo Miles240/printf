@@ -84,6 +84,26 @@ int _printf(const char *format, ...)
 				write(1, num_str, len);
 				chars_printed += len;
 				break;
+			case 'S':
+				str = va_arg(args, char *);
+				while (*str)
+				{
+					if (*str < 32 || *str >= 127)
+					{
+						char hex[3];
+						sprintf(hex, "%02X", (unsigned char)*str);
+						write(1, "\\x", 2);
+						write(1, hex, 2);
+						chars_printed += 4;
+					}
+					else
+					{
+						write(1, str, 1);
+						chars_printed++;
+					}
+					str++;
+				}
+				break;
 			}
 		}
 		else
