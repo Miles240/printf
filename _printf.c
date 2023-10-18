@@ -104,13 +104,6 @@ int _printf(const char *format, ...)
 					str++;
 				}
 				break;
-			case 'p':
-				num2 = (unsigned int)va_arg(args, void *);
-				write(1, "0x", 2);
-				len = sprintf(num_str, "%lx", (unsigned long)num2);
-				write(1, num_str, len);
-				chars_printed += len + 2;
-				break;
 			}
 		}
 		else
